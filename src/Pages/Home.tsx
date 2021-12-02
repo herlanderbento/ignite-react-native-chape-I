@@ -4,13 +4,27 @@ import { Button } from "../components/Button";
 import { SkillCard } from "../components/SkillCard";
 import { styles } from "../styles/styles";
 
+interface SkillData {
+  id: string;
+  name: string;
+}
+
 export function Home() {
   const [newSkill, setNewSkill] = useState("");
-  const [mySkills, setMySkills] = useState([]);
+  const [mySkills, setMySkills] = useState<SkillData[]>([]);
   const [greeting, setGreeting] = useState("");
 
   function handleAddNewSkills() {
-    setMySkills((oldState) => [...oldState, newSkill]);
+    const data = {
+      id: String(new Date().getTime()),
+      name: newSkill,
+    };
+
+    setMySkills((oldState) => [...oldState, data]);
+  }
+
+  function handleRemoveSkill(id: string) {
+    setMySkills((oldState) => oldState.filter((skill) => skill.id !== id));
   }
 
   useEffect(() => {
@@ -36,13 +50,18 @@ export function Home() {
         onChangeText={setNewSkill}
       />
 
-      <Button onPress={handleAddNewSkills}>Add</Button>
+      <Button title="New Add" onPress={handleAddNewSkills} />
 
       <Text style={[styles.title, { marginVertical: 20 }]}>My Skills</Text>
       <FlatList
         data={mySkills}
-        keyExtractor={(item) => item}
-        renderItem={({ item }) => <SkillCard key={item} skills={item} />}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <SkillCard
+            onPress={() => handleRemoveSkill(item.id)}
+            skills={item.name}
+          />
+        )}
       />
       {/* <ScrollView>
         {mySkills.map((skills) => (
