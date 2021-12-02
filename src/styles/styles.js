@@ -46,4 +46,9 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
+  greeting: {
+    color: "#FFF",
+    marginTop: 5,
+    fontSize: 14,
+  },
 });
